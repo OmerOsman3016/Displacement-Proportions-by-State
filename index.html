@@ -6,27 +6,24 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'">
   <meta name="description" content="Sudan | Displacement Tracking Matrix-Returnees Flow" />
   
-  <!-- External CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: Arial, sans-serif;
     }
     .frame-container {
       width: 100%;
       height: 100vh;
       display: flex;
-      flex-direction: column;
     }
     .map-container {
       flex: 1;
-      position: relative;
+      height: 100%;
     }
-    .pie-map {
+    #map5 {
       width: 100%;
       height: 100%;
     }
@@ -35,12 +32,10 @@
       padding: 10px;
       border-radius: 5px;
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      line-height: 1.5;
-      font-size: 14px;
     }
     .legend h4 {
       margin: 0 0 10px;
-      text-align: center;
+      font-size: 14px;
     }
     .legend-checkbox {
       margin: 5px 0;
@@ -50,46 +45,45 @@
     }
     .marker-size-label {
       font-size: 12px;
-      color: #555;
       margin: 5px 0;
     }
     .marker-size-buttons {
       display: flex;
       gap: 5px;
-      margin: 5px 0;
     }
     .marker-size-buttons button {
       flex: 1;
-      padding: 3px 5px;
-      font-size: 12px;
-      cursor: pointer;
-      background: #f0f0f0;
-      border: 1px solid #ccc;
-      border-radius: 3px;
     }
-    .marker-size-buttons button.active {
+    button {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.2s;
+    }
+    button.active {
       background: #418FDE;
       color: white;
-      border-color: #2a7bc8;
+      border-color: #418FDE;
+    }
+    button:hover {
+      background: #f0f0f0;
     }
     .pie-chart-marker {
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, filter 0.3s ease;
     }
     .pie-chart-marker:hover {
-      transform: scale(1.1);
-      z-index: 1000;
+      transform: scale(1.15);
+      filter: drop-shadow(0 0 5px rgba(0,0,0,0.3));
     }
-    .pie-tooltip {
-      position: absolute;
-      background: white;
-      padding: 5px 10px;
-      border-radius: 3px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.2);
-      pointer-events: none;
-      font-size: 12px;
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 0.2s;
+    .pie-chart-marker.selected {
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
     }
   </style>
 </head>
@@ -100,13 +94,8 @@
     </div>
   </div>
 
-  <!-- Tooltip element -->
-  <div id="pie-tooltip" class="pie-tooltip"></div>
-
-  <!-- External JS -->
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-
+  <script src="https://unpkg.com/@tweenjs/tween.js@18.6.4/dist/tween.umd.js"></script>
   <script>
     // Pie Chart Map Showing Displacement Proportions
     const map5 = L.map('map5').setView([16, 30], L.Browser.mobile ? 3 : 5.5);
@@ -136,36 +125,21 @@
       ["White Nile", 13.450, 32.500, 179544, 3046811]
     ];
 
-    // Tooltip element
-    const tooltip = document.getElementById('pie-tooltip');
-
-    // Create pie chart icon function with interactive elements
-    function createPieChartIcon(displaced, total, sizeFactor = 1, name = '') {
+    // Create pie chart icon function with standardized size
+    function createPieChartIcon(displaced, total, sizeFactor = 1) {
       const displacedPercent = displaced / total;
       const endAngle = displacedPercent * 360;
       
       const baseRadius = 30;
       const radius = baseRadius * sizeFactor;
       
-      // Create interactive SVG with hoverable segments
       const svg = `
         <svg width="${radius * 2}" height="${radius * 2}" viewBox="0 0 ${radius * 2} ${radius * 2}">
-          <!-- Non-displaced segment (blue) with hover effect -->
-          <circle cx="${radius}" cy="${radius}" r="${radius}" fill="#418FDE" 
-                  class="pie-segment remaining" 
-                  data-name="${name}" data-value="${total - displaced}" data-type="remaining"
-                  style="cursor: pointer;"/>
-          
-          <!-- Displaced segment (orange) with hover effect -->
+          <circle cx="${radius}" cy="${radius}" r="${radius}" fill="#418FDE"/>
           <path d="M${radius},${radius} L${radius},0 A${radius},${radius} 0 ${endAngle > 180 ? 1 : 0},1 
             ${radius + Math.sin((endAngle * Math.PI)/180) * radius},
             ${radius - Math.cos((endAngle * Math.PI)/180) * radius} z" 
-            fill="rgba(255, 103, 31, 0.8)" 
-            class="pie-segment displaced" 
-            data-name="${name}" data-value="${displaced}" data-type="displaced"
-            style="cursor: pointer;"/>
-          
-          <!-- Center circle with percentage -->
+            fill="rgba(255, 103, 31, 0.8)"/>
           <circle cx="${radius}" cy="${radius}" r="${radius * 0.6}" fill="white" opacity="0.7"/>
           <text x="${radius}" y="${radius}" text-anchor="middle" dominant-baseline="middle" 
                 font-size="${8 * sizeFactor}" font-weight="bold" fill="#e04c4c">
@@ -186,19 +160,49 @@
         
     // Store references to all pie chart markers
     const pieMarkers = [];
+    let selectedMarker = null;
 
-    // Add markers with interactive pie charts
+    // Add markers with standardized pie charts
     stateData.forEach(state => {
       const [name, lat, lng, displaced, total] = state;
       
       const marker = L.marker([lat, lng], {
-        icon: createPieChartIcon(displaced, total, 1.0, name)
+        icon: createPieChartIcon(displaced, total, 1.0)
       }).addTo(pieMarkersLayer).bindPopup(`
         <b>${name}</b><br>
         Total Population: ${total.toLocaleString()}<br>
         Displaced: ${displaced.toLocaleString()} (${((displaced/total)*100).toFixed(1)}%)<br>
         Non-Displaced: ${(total - displaced).toLocaleString()}
       `);
+      
+      // Add hover effects
+      marker.on('mouseover', function() {
+        if (marker !== selectedMarker) {
+          marker._icon.classList.add('hovered');
+        }
+      });
+      
+      marker.on('mouseout', function() {
+        if (marker !== selectedMarker) {
+          marker._icon.classList.remove('hovered');
+        }
+      });
+      
+      // Add click animation
+      marker.on('click', function() {
+        // Remove selection from previous marker
+        if (selectedMarker) {
+          selectedMarker._icon.classList.remove('selected');
+          selectedMarker._icon.classList.remove('hovered');
+        }
+        
+        // Select new marker
+        selectedMarker = marker;
+        marker._icon.classList.add('selected');
+        
+        // Bring to front
+        marker.bringToFront();
+      });
       
       // Store reference to marker
       pieMarkers.push({
@@ -211,68 +215,24 @@
       });
     });
 
-    // Add hover effects to pie chart segments
-    document.addEventListener('DOMContentLoaded', function() {
-      // This will run after all markers are added to the DOM
-      setTimeout(() => {
-        const segments = document.querySelectorAll('.pie-segment');
-        
-        segments.forEach(segment => {
-          // Mouse enter event
-          segment.addEventListener('mouseenter', function(e) {
-            const type = this.getAttribute('data-type');
-            const name = this.getAttribute('data-name');
-            const value = parseInt(this.getAttribute('data-value'));
-            const percent = type === 'displaced' 
-              ? ((value / pieMarkers.find(m => m.name === name).total * 100).toFixed(1) + '%' 
-              : '';
-            
-            // Highlight the segment
-            if (type === 'displaced') {
-              this.setAttribute('fill', 'rgba(255, 70, 0, 1)');
-            } else {
-              this.setAttribute('fill', '#2a7bc8');
-            }
-            
-            // Show tooltip
-            tooltip.innerHTML = `<b>${name}</b><br>${type === 'displaced' ? 'Displaced' : 'Non-Displaced'}: ${value.toLocaleString()} ${percent}`;
-            tooltip.style.opacity = '1';
-            
-            // Position tooltip near cursor
-            const rect = this.getBoundingClientRect();
-            tooltip.style.left = `${rect.right + 5}px`;
-            tooltip.style.top = `${rect.top}px`;
-          });
-          
-          // Mouse leave event
-          segment.addEventListener('mouseleave', function() {
-            const type = this.getAttribute('data-type');
-            
-            // Restore original color
-            if (type === 'displaced') {
-              this.setAttribute('fill', 'rgba(255, 103, 31, 0.8)');
-            } else {
-              this.setAttribute('fill', '#418FDE');
-            }
-            
-            // Hide tooltip
-            tooltip.style.opacity = '0';
-          });
-          
-          // Click event
-          segment.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent map click events
-            const name = this.getAttribute('data-name');
-            const marker = pieMarkers.find(m => m.name === name);
-            if (marker) {
-              marker.marker.openPopup();
-            }
-          });
-        });
-      }, 500); // Small delay to ensure markers are rendered
-    });
+    // Function to animate pie chart size changes
+    function animatePieChartSizeChange(marker, newSizeFactor) {
+      const originalSize = marker.getIcon().options.iconSize[0] / 2;
+      const targetSize = 30 * newSizeFactor;
+      
+      const tween = new TWEEN.Tween({ size: originalSize })
+        .to({ size: targetSize }, 500)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .onUpdate(function() {
+          const displaced = marker.displaced || marker.options.displaced;
+          const total = marker.total || marker.options.total;
+          const newIcon = createPieChartIcon(displaced, total, this.size / 30);
+          marker.setIcon(newIcon);
+        })
+        .start();
+    }
 
-    // Function to update pie chart sizes
+    // Function to update pie chart sizes with animation
     function updatePieChartSizes(size) {
       const sizeFactors = {
         small: 0.7,
@@ -282,49 +242,18 @@
       
       const factor = sizeFactors[size];
       
-      // Update all pie chart markers
+      // Animate all pie chart markers
       pieMarkers.forEach(pieMarker => {
-        pieMarker.marker.setIcon(createPieChartIcon(pieMarker.displaced, pieMarker.total, factor, pieMarker.name));
+        animatePieChartSizeChange(pieMarker.marker, factor);
       });
-      
-      // Reattach event listeners after resize
-      setTimeout(() => {
-        const segments = document.querySelectorAll('.pie-segment');
-        segments.forEach(segment => {
-          segment.addEventListener('mouseenter', function(e) {
-            const type = this.getAttribute('data-type');
-            const name = this.getAttribute('data-name');
-            const value = parseInt(this.getAttribute('data-value'));
-            const percent = type === 'displaced' 
-              ? ((value / pieMarkers.find(m => m.name === name).total * 100).toFixed(1) + '%' 
-              : '';
-            
-            if (type === 'displaced') {
-              this.setAttribute('fill', 'rgba(255, 70, 0, 1)');
-            } else {
-              this.setAttribute('fill', '#2a7bc8');
-            }
-            
-            tooltip.innerHTML = `<b>${name}</b><br>${type === 'displaced' ? 'Displaced' : 'Non-Displaced'}: ${value.toLocaleString()} ${percent}`;
-            tooltip.style.opacity = '1';
-            
-            const rect = this.getBoundingClientRect();
-            tooltip.style.left = `${rect.right + 5}px`;
-            tooltip.style.top = `${rect.top}px`;
-          });
-          
-          segment.addEventListener('mouseleave', function() {
-            const type = this.getAttribute('data-type');
-            if (type === 'displaced') {
-              this.setAttribute('fill', 'rgba(255, 103, 31, 0.8)');
-            } else {
-              this.setAttribute('fill', '#418FDE');
-            }
-            tooltip.style.opacity = '0';
-          });
-        });
-      }, 100);
     }
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      TWEEN.update();
+    }
+    animate();
 
     // Enhanced legend control for pie chart map
     const legend5 = L.control({ position: 'bottomright' });
@@ -357,17 +286,25 @@
       
       displacedCheckbox.addEventListener('change', function() {
         // Toggle visibility of displaced segments (orange)
-        const opacity = this.checked ? '0.8' : '0';
-        document.querySelectorAll('.pie-segment.displaced').forEach(segment => {
-          segment.setAttribute('fill', `rgba(255, 103, 31, ${opacity})`);
+        const opacity = this.checked ? 1 : 0;
+        pieMarkers.forEach(pieMarker => {
+          const icon = pieMarker.marker.getIcon();
+          const newHtml = icon.options.html.replace(/fill="rgba\(255, 103, 31, [\d.]+\)"/g, 
+                                          `fill="rgba(255, 103, 31, ${opacity})"`);
+          icon.options.html = newHtml;
+          pieMarker.marker.setIcon(icon);
         });
       });
       
       remainingCheckbox.addEventListener('change', function() {
         // Toggle visibility of remaining segments (blue)
-        const opacity = this.checked ? '1' : '0';
-        document.querySelectorAll('.pie-segment.remaining').forEach(segment => {
-          segment.setAttribute('fill', `rgba(65, 143, 222, ${opacity})`);
+        const opacity = this.checked ? 1 : 0;
+        pieMarkers.forEach(pieMarker => {
+          const icon = pieMarker.marker.getIcon();
+          const newHtml = icon.options.html.replace(/fill="#418FDE"/g, 
+                                          `fill="rgba(65, 143, 222, ${opacity})"`);
+          icon.options.html = newHtml;
+          pieMarker.marker.setIcon(icon);
         });
       });
       
@@ -380,7 +317,7 @@
           // Add active class to clicked button
           this.classList.add('active');
           
-          // Change marker size
+          // Change marker size with animation
           const size = this.id.split('-')[1]; // small, medium, or large
           updatePieChartSizes(size);
         });
