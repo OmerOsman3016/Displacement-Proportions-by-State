@@ -60,22 +60,35 @@ const stateData = [
   ["White Nile", 13.450, 32.500, 179544, 3046811]
 ];
 
-// Create pie chart icon function with standardized size
 function createPieChartIcon(displaced, total, sizeFactor = 1) {
   const displacedPercent = displaced / total;
-  const endAngle = displacedPercent * 360;
+  const angle = displacedPercent * 360;
   
-  // Use a fixed radius for all pie charts (e.g., 16 pixels)
   const baseRadius = 30;
   const radius = baseRadius * sizeFactor;
   
+  const endX = radius + Math.sin((angle * Math.PI)/180) * radius;
+  const endY = radius - Math.cos((angle * Math.PI)/180) * radius;
+  const largeArc = angle > 180 ? 1 : 0;
+
+  const displacedColor = 'rgba(255, 103, 31, 0.8)';
+  const remainingColor = '#418FDE';
+
   const svg = `
-    <svg width="${radius * 2}" height="${radius * 2}" viewBox="0 0 ${radius * 2} ${radius * 2}">
-      <circle cx="${radius}" cy="${radius}" r="${radius}" fill="#418FDE"/>
-      <path d="M${radius},${radius} L${radius},0 A${radius},${radius} 0 ${endAngle > 180 ? 1 : 0},1 
-        ${radius + Math.sin((endAngle * Math.PI)/180) * radius},
-        ${radius - Math.cos((endAngle * Math.PI)/180) * radius} z" 
-        fill="rgba(255, 103, 31, 0.8)"/>
+    <svg width="${radius * 2}" height="${radius * 2}" viewBox="0 0 ${radius * 2} ${radius * 2}" xmlns="http://www.w3.org/2000/svg">
+      <path d="M${radius},${radius} L${radius},0 
+        A${radius},${radius} 0 ${largeArc},1 ${endX},${endY} Z" 
+        fill="${displacedColor}"
+        onmouseover="this.setAttribute('fill', '#ff471a');"
+        onmouseout="this.setAttribute('fill', '${displacedColor}');"
+        onclick="alert('${Math.round(displacedPercent * 100)}% Displaced');"/>
+      <path d="M${endX},${endY} 
+        A${radius},${radius} 0 ${1 - largeArc},1 ${radius},0 
+        L${radius},${radius} Z" 
+        fill="${remainingColor}"
+        onmouseover="this.setAttribute('fill', '#66b3ff');"
+        onmouseout="this.setAttribute('fill', '${remainingColor}');"
+        onclick="alert('${Math.round((1 - displacedPercent) * 100)}% Remaining');"/>
       <circle cx="${radius}" cy="${radius}" r="${radius * 0.6}" fill="white" opacity="0.7"/>
       <text x="${radius}" y="${radius}" text-anchor="middle" dominant-baseline="middle" 
             font-size="${8 * sizeFactor}" font-weight="bold" fill="#e04c4c">
@@ -91,122 +104,6 @@ function createPieChartIcon(displaced, total, sizeFactor = 1) {
   });
 }
 
-// Create a layer group for the pie chart markers
-const pieMarkersLayer = L.layerGroup().addTo(map5);
-    
-// Store references to all pie chart markers
-const pieMarkers = [];
-
-// Add markers with standardized pie charts
-stateData.forEach(state => {
-  const [name, lat, lng, displaced, total] = state;
-  
-  const marker = L.marker([lat, lng], {
-    icon: createPieChartIcon(displaced, total, 1.0) // Default medium size
-  }).addTo(pieMarkersLayer).bindPopup(`
-    <b>${name}</b><br>
-    Total Population: ${total.toLocaleString()}<br>
-    Displaced: ${displaced.toLocaleString()} (${((displaced/total)*100).toFixed(1)}%)<br>
-    Non-Displaced: ${(total - displaced).toLocaleString()}
-  `);
-  
-  // Store reference to marker
-  pieMarkers.push({
-    name: name,
-    lat: lat,
-    lng: lng,
-    displaced: displaced,
-    total: total,
-    marker: marker
-  });
-});
-
-// Function to update pie chart sizes
-function updatePieChartSizes(size) {
-  const sizeFactors = {
-    small: 0.7,
-    medium: 1.0,
-    large: 1.3
-  };
-  
-  const factor = sizeFactors[size];
-  
-  // Update all pie chart markers
-  pieMarkers.forEach(pieMarker => {
-    pieMarker.marker.setIcon(createPieChartIcon(pieMarker.displaced, pieMarker.total, factor));
-  });
-}
-
-// Enhanced legend control for pie chart map
-const legend5 = L.control({ position: 'bottomright' });
-legend5.onAdd = () => {
-  const div = L.DomUtil.create('div', 'legend');
-  div.innerHTML = `
-    <h4>Displacement Proportion</h4>
-    <div class="legend-checkbox">
-      <input type="checkbox" id="displaced-checkbox" checked>
-      <label for="displaced-checkbox">Displaced Population</label>
-    </div>
-    <div class="legend-checkbox">
-      <input type="checkbox" id="remaining-checkbox" checked>
-      <label for="remaining-checkbox">Remaining Population</label>
-    </div>
-    <div class="marker-size-controls">
-      <div class="marker-size-label">Marker Size</div>
-      <div class="marker-size-buttons">
-        <button id="size-small">Small</button>
-        <button id="size-medium" class="active">Medium</button>
-        <button id="size-large">Large</button>
-      </div>
-      <div class="marker-size-label">Represents total state population</div>
-    </div>
-  `;
-  
-  // Add functionality to checkboxes
-  const displacedCheckbox = div.querySelector('#displaced-checkbox');
-  const remainingCheckbox = div.querySelector('#remaining-checkbox');
-  
-  displacedCheckbox.addEventListener('change', function() {
-    // Toggle visibility of displaced segments (orange)
-    const opacity = this.checked ? 1 : 0;
-    pieMarkers.forEach(pieMarker => {
-      const icon = pieMarker.marker.getIcon();
-      const newHtml = icon.options.html.replace(/fill="rgba\(255, 103, 31, [\d.]+\)"/g, 
-                                      `fill="rgba(255, 103, 31, ${opacity})"`);
-      icon.options.html = newHtml;
-      pieMarker.marker.setIcon(icon);
-    });
-  });
-  
-  remainingCheckbox.addEventListener('change', function() {
-    // Toggle visibility of remaining segments (blue)
-    const opacity = this.checked ? 1 : 0;
-    pieMarkers.forEach(pieMarker => {
-      const icon = pieMarker.marker.getIcon();
-      const newHtml = icon.options.html.replace(/fill="#418FDE"/g, 
-                                      `fill="rgba(65, 143, 222, ${opacity})"`);
-      icon.options.html = newHtml;
-      pieMarker.marker.setIcon(icon);
-    });
-  });
-  
-  // Add functionality to size buttons
-  const sizeButtons = div.querySelectorAll('.marker-size-buttons button');
-  sizeButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      // Remove active class from all buttons
-      sizeButtons.forEach(btn => btn.classList.remove('active'));
-      // Add active class to clicked button
-      this.classList.add('active');
-      
-      // Change marker size
-      const size = this.id.split('-')[1]; // small, medium, or large
-      updatePieChartSizes(size);
-    });
-  });
-  
-  return div;
-};
 legend5.addTo(map5);
   </script>
 </body>
