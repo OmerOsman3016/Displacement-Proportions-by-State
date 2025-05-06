@@ -51,17 +51,6 @@
       color: #555;
       margin: 5px 0;
     }
-    .marker-size-buttons button {
-      padding: 3px 8px;
-      margin-right: 5px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    .marker-size-buttons button.active {
-      background: #418FDE;
-      color: white;
-      border: 1px solid #418FDE;
-    }
     .pie-tooltip {
       position: absolute;
       background: rgba(255, 255, 255, 0.9);
@@ -104,27 +93,6 @@ const mapboxCustom1 = L.tileLayer('https://api.mapbox.com/styles/v1/omerosman/cm
     maxZoom: 18
 });
 
-const mapboxCustom2 = L.tileLayer('https://api.mapbox.com/styles/v1/omerosman/cm8oy6is4006101si7ll3bs4h/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib21lcm9zbWFuIiwiYSI6ImUxZDBkODBlNjQxMDE2M2Y3OTQ3MWIwNTJkMjgzZTI3In0.ekCHuxRflTOO0RpQ6rQR7Q', {
-    attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    tileSize: 512,
-    zoomOffset: -1,
-    maxZoom: 18
-});
-
-const mapboxCustom3 = L.tileLayer('https://api.mapbox.com/styles/v1/omerosman/cm8oy6is4006101si7ll3bs4h/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib21lcm9zbWFuIiwiYSI6ImUxZDBkODBlNjQxMDE2M2Y3OTQ3MWIwNTJkMjgzZTI3In0.ekCHuxRflTOO0RpQ6rQR7Q', {
-    attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    tileSize: 512,
-    zoomOffset: -1,
-    maxZoom: 18
-});
-
-const mapboxCustom4 = L.tileLayer('https://api.mapbox.com/styles/v1/omerosman/cm8oy6is4006101si7ll3bs4h/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib21lcm9zbWFuIiwiYSI6ImUxZDBkODBlNjQxMDE2M2Y3OTQ3MWIwNTJkMjgzZTI3In0.ekCHuxRflTOO0RpQ6rQR7Q', {
-    attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    tileSize: 512,
-    zoomOffset: -1,
-    maxZoom: 18
-});
-
 // Define other base layers
 const cartoDBLight1 = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -132,42 +100,6 @@ const cartoDBLight1 = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{
 
 const openStreetMap1 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-});
-
-const esriWorldImagery1 = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-  attribution: '&copy; <a href="https://www.esri.com/">Esri</a>'
-});
-
-const stamenToner1 = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
-  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>'
-});
-
-const mapboxLight = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib21lcm9zbWFuIiwiYSI6ImUxZDBkODBlNjQxMDE2M2Y3OTQ3MWIwNTJkMjgzZTI3In0.ekCHuxRflTOO0RpQ6rQR7Q', {
-    attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    tileSize: 512,
-    zoomOffset: -1,
-    maxZoom: 18
-});
-
-const mapboxStreets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib21lcm9zbWFuIiwiYSI6ImUxZDBkODBlNjQxMDE2M2Y3OTQ3MWIwNTJkMjgzZTI3In0.ekCHuxRflTOO0RpQ6rQR7Q', {
-    attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    tileSize: 512,
-    zoomOffset: -1,
-    maxZoom: 18
-});
-
-const mapboxSatellite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib21lcm9zbWFuIiwiYSI6ImUxZDBkODBlNjQxMDE2M2Y3OTQ3MWIwNTJkMjgzZTI3In0.ekCHuxRflTOO0RpQ6rQR7Q', {
-    attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    tileSize: 512,
-    zoomOffset: -1,
-    maxZoom: 18
-});
-
-const mapboxOutdoors = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib21lcm9zbWFuIiwiYSI6ImUxZDBkODBlNjQxMDE2M2Y3OTQ3MWIwNTJkMjgzZTI3In0.ekCHuxRflTOO0RpQ6rQR7Q', {
-    attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    tileSize: 512,
-    zoomOffset: -1,
-    maxZoom: 18
 });
 
 // Pie Chart Map Showing Displacement Proportions with Animation
@@ -178,63 +110,76 @@ mapboxCustom1.addTo(map5);
 
 // Add layer control
 const baseLayers = {
-  "Mapbox Custom 1": mapboxCustom1,
-  "Mapbox Custom 2": mapboxCustom2,
-  "Mapbox Custom 3": mapboxCustom3,
-  "Mapbox Custom 4": mapboxCustom4,
+  "Mapbox Custom": mapboxCustom1,
   "CartoDB Light": cartoDBLight1,
-  "OpenStreetMap": openStreetMap1,
-  "Esri World Imagery": esriWorldImagery1,
-  "Stamen Toner": stamenToner1,
-  "Mapbox Light": mapboxLight,
-  "Mapbox Streets": mapboxStreets,
-  "Mapbox Outdoors": mapboxOutdoors,
-  "Mapbox Satellite": mapboxSatellite
+  "OpenStreetMap": openStreetMap1
 };
 
 L.control.layers(baseLayers).addTo(map5);
 
-// State data with coordinates (lat, lng), displaced, total population
+// State data with coordinates (lat, lng), returnees, still displaced, total population
 const stateData = [
-  ["Aj Jazirah", 14.900, 33.434, 876156, 5687557],
-  ["Blue Nile", 11.270, 34.390, 270810, 1344267],
-  ["Central Darfur", 12.900, 23.470, 749491, 1786503],
-  ["East Darfur", 11.160, 26.140, 247874, 1213951],
-  ["Gedaref", 14.040, 35.380, 14327, 2545604],
-  ["Kassala", 15.450, 36.400, 6211, 2811446],
-  ["Khartoum", 15.501, 32.560, 3500400, 9146191],
-  ["North Darfur", 15.766, 27.333, 1844175, 2775652],
-  ["North Kordofan", 13.630, 27.930, 91161, 2160476],
-  ["Northern", 19.615, 30.416, 12052, 1023194],
-  ["Red Sea", 19.580, 37.130, 30480, 1549857],
-  ["River Nile", 18.500, 33.800, 53683, 1651873],
-  ["Sennar", 13.550, 33.600, 244250, 2170863],
-  ["South Darfur", 11.783, 24.883, 2082537, 3912372],
-  ["South Kordofan", 11.150, 29.633, 414734, 2017962],
-  ["West Darfur", 12.900, 22.466, 368971, 1940860],
-  ["West Kordofan", 11.200, 28.433, 314484, 1713462],
-  ["White Nile", 13.450, 32.500, 179544, 3046811]
+  ["Aj Jazirah", 14.900, 33.434, 120000, 756156, 5687557],
+  ["Blue Nile", 11.270, 34.390, 50000, 220810, 1344267],
+  ["Central Darfur", 12.900, 23.470, 150000, 599491, 1786503],
+  ["East Darfur", 11.160, 26.140, 80000, 167874, 1213951],
+  ["Gedaref", 14.040, 35.380, 5000, 9327, 2545604],
+  ["Kassala", 15.450, 36.400, 2000, 4211, 2811446],
+  ["Khartoum", 15.501, 32.560, 500000, 3000400, 9146191],
+  ["North Darfur", 15.766, 27.333, 300000, 1544175, 2775652],
+  ["North Kordofan", 13.630, 27.930, 30000, 61161, 2160476],
+  ["Northern", 19.615, 30.416, 5000, 7052, 1023194],
+  ["Red Sea", 19.580, 37.130, 10000, 20480, 1549857],
+  ["River Nile", 18.500, 33.800, 15000, 38683, 1651873],
+  ["Sennar", 13.550, 33.600, 60000, 184250, 2170863],
+  ["South Darfur", 11.783, 24.883, 350000, 1732537, 3912372],
+  ["South Kordofan", 11.150, 29.633, 100000, 314734, 2017962],
+  ["West Darfur", 12.900, 22.466, 80000, 288971, 1940860],
+  ["West Kordofan", 11.200, 28.433, 70000, 244484, 1713462],
+  ["White Nile", 13.450, 32.500, 40000, 139544, 3046811]
 ];
 
 // Create pie chart icon function with animation support
-function createPieChartIcon(displaced, total, sizeFactor = 1, animateProgress = 1) {
+function createPieChartIcon(returnees, displaced, total, sizeFactor = 1, animateProgress = 1) {
+  const returneesPercent = returnees / total;
   const displacedPercent = displaced / total;
-  const endAngle = displacedPercent * 360 * animateProgress;
+  
+  const returneesAngle = returneesPercent * 360 * animateProgress;
+  const displacedAngle = displacedPercent * 360 * animateProgress;
   
   const baseRadius = 30;
   const radius = baseRadius * sizeFactor;
   
   const svg = `
     <svg width="${radius * 2}" height="${radius * 2}" viewBox="0 0 ${radius * 2} ${radius * 2}">
+      <!-- Background (non-displaced) -->
       <circle cx="${radius}" cy="${radius}" r="${radius}" fill="#418FDE"/>
-      <path d="M${radius},${radius} L${radius},0 A${radius},${radius} 0 ${endAngle > 180 ? 1 : 0},1 
-        ${radius + Math.sin((endAngle * Math.PI)/180) * radius},
-        ${radius - Math.cos((endAngle * Math.PI)/180) * radius} z" 
-        fill="rgba(255, 103, 31, 0.8)"/>
+      
+      <!-- Displaced segment -->
+      <path d="M${radius},${radius} 
+              L${radius},0 
+              A${radius},${radius} 0 ${displacedAngle > 180 ? 1 : 0},1 
+              ${radius + Math.sin((displacedAngle * Math.PI)/180) * radius},
+              ${radius - Math.cos((displacedAngle * Math.PI)/180) * radius} 
+              Z" 
+            fill="rgba(255, 103, 31, 0.8)"/>
+      
+      <!-- Returnees segment (smaller arc inside displaced) -->
+      <path d="M${radius},${radius} 
+              L${radius},0 
+              A${radius},${radius} 0 ${returneesAngle > 180 ? 1 : 0},1 
+              ${radius + Math.sin((returneesAngle * Math.PI)/180) * radius},
+              ${radius - Math.cos((returneesAngle * Math.PI)/180) * radius} 
+              Z" 
+            fill="rgba(50, 205, 50, 0.8)"/>
+      
+      <!-- White center circle -->
       <circle cx="${radius}" cy="${radius}" r="${radius * 0.6}" fill="white" opacity="0.7"/>
+      
+      <!-- Percentage text -->
       <text x="${radius}" y="${radius}" text-anchor="middle" dominant-baseline="middle" 
-            font-size="${8 * sizeFactor}" font-weight="bold" fill="#e04c4c">
-        ${Math.round(displacedPercent * 100 * animateProgress)}%
+            font-size="${8 * sizeFactor}" font-weight="bold" fill="#333">
+        ${Math.round((returneesPercent + displacedPercent) * 100 * animateProgress)}%
       </text>
     </svg>
   `;
@@ -257,11 +202,11 @@ const pieMarkers = [];
 
 // Add markers with animated pie charts
 stateData.forEach((state, index) => {
-  const [name, lat, lng, displaced, total] = state;
+  const [name, lat, lng, returnees, displaced, total] = state;
   
   // Start with empty pie (progress = 0)
   const marker = L.marker([lat, lng], {
-    icon: createPieChartIcon(displaced, total, 1.0, 0)
+    icon: createPieChartIcon(returnees, displaced, total, 1.0, 0)
   }).addTo(pieMarkersLayer);
   
   // Store reference to marker
@@ -269,6 +214,7 @@ stateData.forEach((state, index) => {
     name: name,
     lat: lat,
     lng: lng,
+    returnees: returnees,
     displaced: displaced,
     total: total,
     marker: marker
@@ -287,6 +233,7 @@ stateData.forEach((state, index) => {
     .onUpdate(() => {
       marker.setIcon(
         createPieChartIcon(
+          returnees,
           displaced, 
           total, 
           1.0, 
@@ -299,14 +246,15 @@ stateData.forEach((state, index) => {
   // Add hover interactions
   marker.on('mouseover', function(e) {
     // Highlight this marker
-    marker.setIcon(createPieChartIcon(displaced, total, 1.3));
+    marker.setIcon(createPieChartIcon(returnees, displaced, total, 1.3));
     
     // Show tooltip
     tooltip.innerHTML = `
       <b>${name}</b><br>
       Total Population: ${total.toLocaleString()}<br>
-      Displaced: ${displaced.toLocaleString()} (${((displaced/total)*100).toFixed(1)}%)<br>
-      Non-Displaced: ${(total - displaced).toLocaleString()}
+      <span style="color: #32CD32">Returnees: ${returnees.toLocaleString()} (${((returnees/total)*100).toFixed(1)}%)</span><br>
+      <span style="color: #FF671F">Still Displaced: ${displaced.toLocaleString()} (${((displaced/total)*100).toFixed(1)}%)</span><br>
+      Non-Displaced: ${(total - returnees - displaced).toLocaleString()} (${(((total - returnees - displaced)/total)*100).toFixed(1)}%)
     `;
     tooltip.style.opacity = '1';
     tooltip.style.left = `${e.originalEvent.pageX + 10}px`;
@@ -315,7 +263,7 @@ stateData.forEach((state, index) => {
   
   marker.on('mouseout', function() {
     // Return to normal size
-    marker.setIcon(createPieChartIcon(displaced, total, 1.0));
+    marker.setIcon(createPieChartIcon(returnees, displaced, total, 1.0));
     tooltip.style.opacity = '0';
   });
   
@@ -337,14 +285,18 @@ const legend5 = L.control({ position: 'bottomright' });
 legend5.onAdd = () => {
   const div = L.DomUtil.create('div', 'legend');
   div.innerHTML = `
-    <h4>Displacement Proportion</h4>
+    <h4>Population Status</h4>
+    <div class="legend-checkbox">
+      <input type="checkbox" id="returnees-checkbox" checked>
+      <label for="returnees-checkbox" style="color: #32CD32">Returnees</label>
+    </div>
     <div class="legend-checkbox">
       <input type="checkbox" id="displaced-checkbox" checked>
-      <label for="displaced-checkbox">Displaced Population</label>
+      <label for="displaced-checkbox" style="color: #FF671F">Still Displaced</label>
     </div>
     <div class="legend-checkbox">
       <input type="checkbox" id="remaining-checkbox" checked>
-      <label for="remaining-checkbox">Remaining Population</label>
+      <label for="remaining-checkbox" style="color: #418FDE">Non-Displaced</label>
     </div>
     <div class="marker-size-controls">
       <div class="marker-size-label">Hover over markers for details</div>
@@ -353,8 +305,21 @@ legend5.onAdd = () => {
   `;
   
   // Add functionality to checkboxes
+  const returneesCheckbox = div.querySelector('#returnees-checkbox');
   const displacedCheckbox = div.querySelector('#displaced-checkbox');
   const remainingCheckbox = div.querySelector('#remaining-checkbox');
+  
+  returneesCheckbox.addEventListener('change', function() {
+    // Toggle visibility of returnees segments (green)
+    const opacity = this.checked ? 0.8 : 0;
+    pieMarkers.forEach(pieMarker => {
+      const icon = pieMarker.marker.getIcon();
+      const newHtml = icon.options.html.replace(/fill="rgba\(50, 205, 50, [\d.]+\)"/g, 
+                                      `fill="rgba(50, 205, 50, ${opacity})"`);
+      icon.options.html = newHtml;
+      pieMarker.marker.setIcon(icon);
+    });
+  });
   
   displacedCheckbox.addEventListener('change', function() {
     // Toggle visibility of displaced segments (orange)
