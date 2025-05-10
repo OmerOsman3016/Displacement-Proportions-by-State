@@ -206,7 +206,7 @@ stateData.forEach((state, index) => {
   
   // Start with empty pie (progress = 0)
   const marker = L.marker([lat, lng], {
-    icon: createPieChartIcon(returnees, displaced, total, 1.0, 0)
+    icon: createPieChartIcon(returnees, displaced, total, 1.5, 0)
   }).addTo(pieMarkersLayer);
   
   // Store reference to marker
@@ -236,7 +236,7 @@ stateData.forEach((state, index) => {
           returnees,
           displaced, 
           total, 
-          1.0, 
+          1.5, 
           start.progress
         )
       );
