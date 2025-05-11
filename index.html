@@ -9,67 +9,164 @@
   <!-- External CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', Arial, sans-serif;
+      background-color: #f5f7fa;
+      overflow: hidden;
     }
     .frame-container {
       width: 100%;
       height: 100vh;
       position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
     .map-container {
       width: 100%;
       height: 100%;
+      position: relative;
     }
     .pie-map {
       width: 100%;
       height: 100%;
+      border-radius: 8px;
+      overflow: hidden;
     }
     .legend {
-      background: white;
-      padding: 10px;
-      border-radius: 5px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      line-height: 1.5;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+      line-height: 1.6;
       font-size: 14px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(0,0,0,0.1);
     }
     .legend h4 {
-      margin: 0 0 10px;
+      margin: 0 0 15px;
       text-align: center;
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 16px;
     }
     .legend-checkbox {
-      margin: 5px 0;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+    }
+    .legend-checkbox input {
+      margin-right: 10px;
+      accent-color: #3498db;
+    }
+    .legend-checkbox label {
+      color: #34495e;
+      font-weight: 500;
     }
     .marker-size-controls {
-      margin-top: 10px;
+      margin-top: 15px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,0.1);
     }
     .marker-size-label {
       font-size: 12px;
-      color: #555;
+      color: #7f8c8d;
       margin: 5px 0;
+      line-height: 1.4;
     }
     .pie-tooltip {
       position: absolute;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 8px;
-      border-radius: 4px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 12px 15px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
       pointer-events: none;
       z-index: 1000;
-      font-size: 12px;
-      max-width: 200px;
-      transition: opacity 0.3s;
+      font-size: 13px;
+      max-width: 250px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       opacity: 0;
+      transform: translateY(10px);
+      border: 1px solid rgba(0,0,0,0.1);
+      font-family: 'Poppins', sans-serif;
+    }
+    .pie-tooltip b {
+      color: #2c3e50;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .pie-tooltip span {
+      display: block;
+      margin: 3px 0;
     }
     .pie-chart-marker {
-      transition: transform 0.3s ease;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
     }
     .pie-chart-marker:hover {
-      transform: scale(1.2);
+      transform: scale(1.25);
       z-index: 1000 !important;
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+    }
+    .title-overlay {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      font-family: 'Poppins', sans-serif;
+      max-width: 300px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    .title-overlay h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .title-overlay p {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: #7f8c8d;
+      line-height: 1.4;
+    }
+    .leaflet-control-layers {
+      border-radius: 8px !important;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+      border: 1px solid rgba(0,0,0,0.1) !important;
+    }
+    .leaflet-control-layers-toggle {
+      background-color: white !important;
+    }
+    .leaflet-control-zoom {
+      border-radius: 8px !important;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+      border: 1px solid rgba(0,0,0,0.1) !important;
+    }
+    .leaflet-bar a {
+      background-color: white !important;
+      border-bottom: 1px solid rgba(0,0,0,0.1) !important;
+    }
+    .leaflet-bar a:hover {
+      background-color: #f8f9fa !important;
+    }
+    .animated-circle {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.7; }
     }
   </style>
 </head>
@@ -78,6 +175,10 @@
   <div class="map-container">
     <div id="map5" class="pie-map"></div>
     <div id="pie-tooltip" class="pie-tooltip"></div>
+    <div class="title-overlay">
+      <h1>Sudan Displacement Tracking</h1>
+      <p>Visualizing returnees and displaced populations across Sudanese states. Hover over markers for detailed information.</p>
+    </div>
   </div>
 </div>
 
@@ -85,8 +186,15 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="https://unpkg.com/@tweenjs/tween.js@18.6.4/dist/tween.umd.js"></script>
 <script>
-// Define Mapbox custom layers
-const mapboxCustom1 = L.tileLayer('https://api.mapbox.com/styles/v1/omerosman/cm8oy6is4006101si7ll3bs4h/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib21lcm9zbWFuIiwiYSI6ImUxZDBkODBlNjQxMDE2M2Y3OTQ3MWIwNTJkMjgzZTI3In0.ekCHuxRflTOO0RpQ6rQR7Q', {
+// Define Mapbox custom layers with more aesthetic styles
+const mapboxCustom1 = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib21lcm9zbWFuIiwiYSI6ImUxZDBkODBlNjQxMDE2M2Y3OTQ3MWIwNTJkMjgzZTI3In0.ekCHuxRflTOO0RpQ6rQR7Q', {
+    attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    tileSize: 512,
+    zoomOffset: -1,
+    maxZoom: 18
+});
+
+const mapboxDark = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib21lcm9zbWFuIiwiYSI6ImUxZDBkODBlNjQxMDE2M2Y3OTQ3MWIwNTJkMjgzZTI3In0.ekCHuxRflTOO0RpQ6rQR7Q', {
     attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     tileSize: 512,
     zoomOffset: -1,
@@ -103,19 +211,31 @@ const openStreetMap1 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{
 });
 
 // Pie Chart Map Showing Displacement Proportions with Animation
-const map5 = L.map('map5').setView([16, 30], L.Browser.mobile ? 3 : 5.5);
+const map5 = L.map('map5', {
+  zoomControl: false,
+  preferCanvas: true
+}).setView([16, 30], L.Browser.mobile ? 3 : 5.5);
+
+// Add zoom control with better position
+L.control.zoom({
+  position: 'topright'
+}).addTo(map5);
 
 // Add default base layer
 mapboxCustom1.addTo(map5);
 
 // Add layer control
 const baseLayers = {
-  "Mapbox Custom": mapboxCustom1,
+  "Light Theme": mapboxCustom1,
+  "Dark Theme": mapboxDark,
   "CartoDB Light": cartoDBLight1,
   "OpenStreetMap": openStreetMap1
 };
 
-L.control.layers(baseLayers).addTo(map5);
+L.control.layers(baseLayers, null, {
+  position: 'topright',
+  collapsed: false
+}).addTo(map5);
 
 // State data with coordinates (lat, lng), returnees, still displaced, total population
 const stateData = [
@@ -147,13 +267,14 @@ function createPieChartIcon(returnees, displaced, total, sizeFactor = 1, animate
   const returneesAngle = returneesPercent * 360 * animateProgress;
   const displacedAngle = displacedPercent * 360 * animateProgress;
   
-  const baseRadius = 30;
+  // Dynamic sizing based on total population
+  const baseRadius = 15 + (Math.log(total) / Math.log(1000000)) * 25;
   const radius = baseRadius * sizeFactor;
   
   const svg = `
     <svg width="${radius * 2}" height="${radius * 2}" viewBox="0 0 ${radius * 2} ${radius * 2}">
       <!-- Background (non-displaced) -->
-      <circle cx="${radius}" cy="${radius}" r="${radius}" fill="#418FDE"/>
+      <circle cx="${radius}" cy="${radius}" r="${radius}" fill="#3498db" opacity="0.9"/>
       
       <!-- Displaced segment -->
       <path d="M${radius},${radius} 
@@ -162,7 +283,7 @@ function createPieChartIcon(returnees, displaced, total, sizeFactor = 1, animate
               ${radius + Math.sin((displacedAngle * Math.PI)/180) * radius},
               ${radius - Math.cos((displacedAngle * Math.PI)/180) * radius} 
               Z" 
-            fill="rgba(255, 103, 31, 0.8)"/>
+            fill="rgba(231, 76, 60, 0.9)"/>
       
       <!-- Returnees segment (smaller arc inside displaced) -->
       <path d="M${radius},${radius} 
@@ -171,14 +292,14 @@ function createPieChartIcon(returnees, displaced, total, sizeFactor = 1, animate
               ${radius + Math.sin((returneesAngle * Math.PI)/180) * radius},
               ${radius - Math.cos((returneesAngle * Math.PI)/180) * radius} 
               Z" 
-            fill="rgba(50, 205, 50, 0.8)"/>
+            fill="rgba(46, 204, 113, 0.9)"/>
       
       <!-- White center circle -->
-      <circle cx="${radius}" cy="${radius}" r="${radius * 0.6}" fill="white" opacity="0.7"/>
+      <circle cx="${radius}" cy="${radius}" r="${radius * 0.5}" fill="white" opacity="0.9" class="animated-circle"/>
       
       <!-- Percentage text -->
       <text x="${radius}" y="${radius}" text-anchor="middle" dominant-baseline="middle" 
-            font-size="${8 * sizeFactor}" font-weight="bold" fill="#333">
+            font-size="${radius * 0.3}" font-weight="600" fill="#2c3e50">
         ${Math.round((returneesPercent + displacedPercent) * 100 * animateProgress)}%
       </text>
     </svg>
@@ -206,7 +327,7 @@ stateData.forEach((state, index) => {
   
   // Start with empty pie (progress = 0)
   const marker = L.marker([lat, lng], {
-    icon: createPieChartIcon(returnees, displaced, total, 1.5, 0)
+    icon: createPieChartIcon(returnees, displaced, total, 1.0, 0)
   }).addTo(pieMarkersLayer);
   
   // Store reference to marker
@@ -227,8 +348,8 @@ stateData.forEach((state, index) => {
   const end = { progress: 1 };
   
   new TWEEN.Tween(start)
-    .to(end, 1000)
-    .delay(index * 100)
+    .to(end, 1500)
+    .delay(index * 150)
     .easing(TWEEN.Easing.Elastic.Out)
     .onUpdate(() => {
       marker.setIcon(
@@ -236,7 +357,7 @@ stateData.forEach((state, index) => {
           returnees,
           displaced, 
           total, 
-          1.5, 
+          1.0, 
           start.progress
         )
       );
@@ -246,30 +367,32 @@ stateData.forEach((state, index) => {
   // Add hover interactions
   marker.on('mouseover', function(e) {
     // Highlight this marker
-    marker.setIcon(createPieChartIcon(returnees, displaced, total, 1.3));
+    marker.setIcon(createPieChartIcon(returnees, displaced, total, 1.2));
     
     // Show tooltip
     tooltip.innerHTML = `
       <b>${name}</b><br>
-      Total Population: ${total.toLocaleString()}<br>
-      <span style="color: #32CD32">Returnees: ${returnees.toLocaleString()} (${((returnees/total)*100).toFixed(1)}%)</span><br>
-      <span style="color: #FF671F">Still Displaced: ${displaced.toLocaleString()} (${((displaced/total)*100).toFixed(1)}%)</span><br>
-      Non-Displaced: ${(total - returnees - displaced).toLocaleString()} (${(((total - returnees - displaced)/total)*100).toFixed(1)}%)
+      <span style="color: #555">Total Population: ${total.toLocaleString()}</span><br>
+      <span style="color: #2ecc71">✓ Returnees: ${returnees.toLocaleString()} (${((returnees/total)*100).toFixed(1)}%)</span><br>
+      <span style="color: #e74c3c">⚠ Still Displaced: ${displaced.toLocaleString()} (${((displaced/total)*100).toFixed(1)}%)</span><br>
+      <span style="color: #3498db">● Non-Displaced: ${(total - returnees - displaced).toLocaleString()} (${(((total - returnees - displaced)/total)*100).toFixed(1)}%)</span>
     `;
     tooltip.style.opacity = '1';
-    tooltip.style.left = `${e.originalEvent.pageX + 10}px`;
-    tooltip.style.top = `${e.originalEvent.pageY + 10}px`;
+    tooltip.style.transform = 'translateY(0)';
+    tooltip.style.left = `${e.originalEvent.pageX + 15}px`;
+    tooltip.style.top = `${e.originalEvent.pageY + 15}px`;
   });
   
   marker.on('mouseout', function() {
     // Return to normal size
     marker.setIcon(createPieChartIcon(returnees, displaced, total, 1.0));
     tooltip.style.opacity = '0';
+    tooltip.style.transform = 'translateY(10px)';
   });
   
   marker.on('mousemove', function(e) {
-    tooltip.style.left = `${e.originalEvent.pageX + 10}px`;
-    tooltip.style.top = `${e.originalEvent.pageY + 10}px`;
+    tooltip.style.left = `${e.originalEvent.pageX + 15}px`;
+    tooltip.style.top = `${e.originalEvent.pageY + 15}px`;
   });
 });
 
@@ -288,19 +411,19 @@ legend5.onAdd = () => {
     <h4>Population Status</h4>
     <div class="legend-checkbox">
       <input type="checkbox" id="returnees-checkbox" checked>
-      <label for="returnees-checkbox" style="color: #32CD32">Returnees</label>
+      <label for="returnees-checkbox" style="color: #2ecc71">Returnees</label>
     </div>
     <div class="legend-checkbox">
       <input type="checkbox" id="displaced-checkbox" checked>
-      <label for="displaced-checkbox" style="color: #FF671F">Still Displaced</label>
+      <label for="displaced-checkbox" style="color: #e74c3c">Still Displaced</label>
     </div>
     <div class="legend-checkbox">
       <input type="checkbox" id="remaining-checkbox" checked>
-      <label for="remaining-checkbox" style="color: #418FDE">Non-Displaced</label>
+      <label for="remaining-checkbox" style="color: #3498db">Non-Displaced</label>
     </div>
     <div class="marker-size-controls">
-      <div class="marker-size-label">Hover over markers for details</div>
       <div class="marker-size-label">Marker size represents total population</div>
+      <div class="marker-size-label">Hover for detailed statistics</div>
     </div>
   `;
   
@@ -311,11 +434,11 @@ legend5.onAdd = () => {
   
   returneesCheckbox.addEventListener('change', function() {
     // Toggle visibility of returnees segments (green)
-    const opacity = this.checked ? 0.8 : 0;
+    const opacity = this.checked ? 0.9 : 0;
     pieMarkers.forEach(pieMarker => {
       const icon = pieMarker.marker.getIcon();
-      const newHtml = icon.options.html.replace(/fill="rgba\(50, 205, 50, [\d.]+\)"/g, 
-                                      `fill="rgba(50, 205, 50, ${opacity})"`);
+      const newHtml = icon.options.html.replace(/fill="rgba\(46, 204, 113, [\d.]+\)"/g, 
+                                      `fill="rgba(46, 204, 113, ${opacity})"`);
       icon.options.html = newHtml;
       pieMarker.marker.setIcon(icon);
     });
@@ -323,11 +446,11 @@ legend5.onAdd = () => {
   
   displacedCheckbox.addEventListener('change', function() {
     // Toggle visibility of displaced segments (orange)
-    const opacity = this.checked ? 0.8 : 0;
+    const opacity = this.checked ? 0.9 : 0;
     pieMarkers.forEach(pieMarker => {
       const icon = pieMarker.marker.getIcon();
-      const newHtml = icon.options.html.replace(/fill="rgba\(255, 103, 31, [\d.]+\)"/g, 
-                                      `fill="rgba(255, 103, 31, ${opacity})"`);
+      const newHtml = icon.options.html.replace(/fill="rgba\(231, 76, 60, [\d.]+\)"/g, 
+                                      `fill="rgba(231, 76, 60, ${opacity})"`);
       icon.options.html = newHtml;
       pieMarker.marker.setIcon(icon);
     });
@@ -335,11 +458,11 @@ legend5.onAdd = () => {
   
   remainingCheckbox.addEventListener('change', function() {
     // Toggle visibility of remaining segments (blue)
-    const opacity = this.checked ? 1 : 0;
+    const opacity = this.checked ? 0.9 : 0;
     pieMarkers.forEach(pieMarker => {
       const icon = pieMarker.marker.getIcon();
-      const newHtml = icon.options.html.replace(/fill="#418FDE"/g, 
-                                      `fill="rgba(65, 143, 222, ${opacity})"`);
+      const newHtml = icon.options.html.replace(/fill="#3498db" opacity="[\d.]+"/g, 
+                                      `fill="#3498db" opacity="${opacity}"`);
       icon.options.html = newHtml;
       pieMarker.marker.setIcon(icon);
     });
@@ -351,8 +474,8 @@ legend5.addTo(map5);
 
 // Update tooltip position on map move
 map5.on('mousemove', function(e) {
-  tooltip.style.left = `${e.originalEvent.pageX + 10}px`;
-  tooltip.style.top = `${e.originalEvent.pageY + 10}px`;
+  tooltip.style.left = `${e.originalEvent.pageX + 15}px`;
+  tooltip.style.top = `${e.originalEvent.pageY + 15}px`;
 });
 </script>
 </body>
