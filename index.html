@@ -271,7 +271,7 @@ function createPieChartIcon(returnees, displaced, total, sizeFactor = 1, animate
   const svg = `
     <svg width="${radius * 2}" height="${radius * 2}" viewBox="0 0 ${radius * 2} ${radius * 2}">
       <!-- Background (non-displaced) -->
-      <circle cx="${radius}" cy="${radius}" r="${radius}" fill="#3498db" opacity="0.9"/>
+      <circle cx="${radius}" cy="${radius}" r="${radius}" fill="#0033A0" opacity="0.9"/>
       
       <!-- Displaced segment -->
       <path d="M${radius},${radius} 
@@ -280,7 +280,7 @@ function createPieChartIcon(returnees, displaced, total, sizeFactor = 1, animate
               ${radius + Math.sin((displacedAngle * Math.PI)/180) * radius},
               ${radius - Math.cos((displacedAngle * Math.PI)/180) * radius} 
               Z" 
-            fill="rgba(231, 76, 60, 0.9)"/>
+            fill="#418FDE"/>
       
       <!-- Returnees segment (smaller arc inside displaced) -->
       <path d="M${radius},${radius} 
@@ -289,7 +289,7 @@ function createPieChartIcon(returnees, displaced, total, sizeFactor = 1, animate
               ${radius + Math.sin((returneesAngle * Math.PI)/180) * radius},
               ${radius - Math.cos((returneesAngle * Math.PI)/180) * radius} 
               Z" 
-            fill="rgba(46, 204, 113, 0.9)"/>
+            fill="#FF671F"/>
       
       <!-- White center circle -->
       <circle cx="${radius}" cy="${radius}" r="${radius * 0.5}" fill="white" opacity="0.9" class="animated-circle"/>
