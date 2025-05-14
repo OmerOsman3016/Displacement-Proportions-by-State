@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'">
-  <meta name="description" content="Sudan | Displacement Tracking Matrix - Returnees Flow" />
+  <meta name="description" content="Displacement Tracking Matrix - Returnees Flow" />
   
   <!-- External CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -169,52 +169,6 @@
       font-size: 12px;
     }
     
-    /* Title Overlay */
-    .title-overlay {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 1000;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 5px 25px rgba(0,0,0,0.1);
-      font-family: 'Poppins', sans-serif;
-      max-width: 320px;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(0,0,0,0.1);
-      transition: var(--transition);
-    }
-    
-    .title-overlay h1 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--primary-color);
-      display: flex;
-      align-items: center;
-    }
-    
-    .title-overlay h1 i {
-      margin-right: 10px;
-      color: var(--secondary-color);
-    }
-    
-    .title-overlay p {
-      margin: 12px 0 0;
-      font-size: 14px;
-      color: var(--text-medium);
-      line-height: 1.5;
-    }
-    
-    .title-overlay .source {
-      margin-top: 15px;
-      font-size: 12px;
-      color: var(--text-light);
-      border-top: 1px solid rgba(0,0,0,0.1);
-      padding-top: 10px;
-    }
-    
     /* Leaflet Control Styles */
     .leaflet-control-layers {
       border-radius: 8px !important;
@@ -323,19 +277,6 @@
     
     /* Responsive Adjustments */
     @media (max-width: 768px) {
-      .title-overlay {
-        max-width: 250px;
-        padding: 15px;
-      }
-      
-      .title-overlay h1 {
-        font-size: 16px;
-      }
-      
-      .title-overlay p {
-        font-size: 12px;
-      }
-      
       .legend {
         font-size: 12px;
         padding: 10px;
@@ -348,13 +289,6 @@
   <div class="map-container">
     <div id="map5" class="pie-map"></div>
     <div id="pie-tooltip" class="pie-tooltip"></div>
-    
-    <!-- Title Overlay -->
-    <div class="title-overlay">
-      <h1><i class="fas fa-people-arrows"></i> Sudan Displacement Overview</h1>
-      <p>This visualization shows the proportion of returnees and displaced populations across Sudanese states. Pie size represents total population, with segments showing different population statuses.</p>
-      <div class="source">Data Source: Displacement Tracking Matrix (DTM)</div>
-    </div>
     
     <!-- Info Panel -->
     <div id="info-panel" class="info-panel">
@@ -705,24 +639,6 @@ document.addEventListener('click', function(e) {
     toggleButton.innerHTML = '<i class="fas fa-info"></i>';
   }
 });
-
-// Add country border highlight
-fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries/SDN.geo.json')
-  .then(response => response.json())
-  .then(data => {
-    const countryLayer = L.geoJSON(data, {
-      style: {
-        color: colors.primary,
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.1,
-        fillColor: colors.primary
-      }
-    }).addTo(map5);
-    
-    // Adjust map view to fit the country with some padding
-    map5.fitBounds(countryLayer.getBounds(), { padding: [50, 50] });
-  });
 </script>
 </body>
 </html>
