@@ -305,6 +305,8 @@
     .dashboard-header h1 { margin: 0; font-size: clamp(1.35rem, 2.4vw, 2rem); line-height: 1.15; }
     .dashboard-header .subtitle { margin: 8px 0 0; color: #dbeafe; font-size: .9rem; }
     .snapshot { display: inline-flex; align-items: center; gap: 7px; margin-top: 10px; font-size: .78rem; color: #e5f7f6; }
+    .source-link { color: #e5f7f6; text-decoration: none; }
+    .source-link:hover { text-decoration: underline; }
     .snapshot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #6ee7b7; box-shadow: 0 0 0 4px rgba(110,231,183,.16); }
 
     .kpi-strip {
@@ -392,11 +394,11 @@
       <img src="./data/IOM_DTM_WHITE.png" alt="IOM DTM">
       <div><p class="eyebrow">Sudan · Mobility Tracking</p><h1>Displacement Proportions by State</h1></div>
     </div>
-    <p class="subtitle">Explore the distribution of displaced people, returnees and non-displaced populations across Sudan.</p>
-    <div class="snapshot">State-level population profile</div>
+    <p class="subtitle">Latest IOM DTM national displacement and return figures, with an interactive state population profile.</p>
+    <a class="snapshot source-link" href="https://dtm.iom.int/reports/dtm-sudan-displacement-and-return-snapshot-8" target="_blank" rel="noopener">IOM DTM Snapshot 8 · 18 August 2026</a>
   </header>
   <section class="kpi-strip" aria-label="Population summary">
-    <article class="kpi-card"><div class="kpi-label">Population</div><div class="kpi-value" id="kpi-population">—</div></article>
+    <article class="kpi-card"><div class="kpi-label">IDPs + Returnees</div><div class="kpi-value" id="kpi-population">—</div></article>
     <article class="kpi-card"><div class="kpi-label">Displaced</div><div class="kpi-value" id="kpi-displaced">—</div></article>
     <article class="kpi-card"><div class="kpi-label">Returnees</div><div class="kpi-value" id="kpi-returnees">—</div></article>
   </section>
@@ -408,7 +410,7 @@
 
     <aside class="ranking-panel">
       <h2>Highest displacement totals</h2>
-      <p>Top five states represented in the map</p>
+      <p>Latest reported IDP totals · July 2026</p>
       <div class="ranking-chart"><canvas id="rankingChart"></canvas></div>
     </aside>
 
@@ -416,7 +418,7 @@
     <!-- Info Panel -->
     <div id="info-panel" class="info-panel">
       <h3>About This Visualization</h3>
-      <p>The pie charts represent population status in each state:</p>
+      <p>The pie charts represent the embedded state population profile. National KPI cards and the ranking chart use IOM DTM Snapshot 8 (July 2026).</p>
       <div class="legend-item">
         <div class="legend-color" style="background: var(--primary-color);"></div>
         <div class="legend-label">Non-Displaced</div>
@@ -531,17 +533,23 @@ const totalDisplaced = stateData.reduce((sum, state) => sum + state[4], 0);
 const totalPopulation = stateData.reduce((sum, state) => sum + state[5], 0);
 
 
-document.getElementById('kpi-population').textContent = totalPopulation.toLocaleString();
-document.getElementById('kpi-displaced').textContent = totalDisplaced.toLocaleString();
-document.getElementById('kpi-returnees').textContent = totalReturnees.toLocaleString();
+document.getElementById('kpi-population').textContent = '13,551,724';
+document.getElementById('kpi-displaced').textContent = '8,622,801';
+document.getElementById('kpi-returnees').textContent = '4,928,923';
 
-const topDisplacementStates = [...stateData].sort((a, b) => b[4] - a[4]).slice(0, 5);
+const topDisplacementStates = [
+  ['South Darfur', 1770000],
+  ['North Darfur', 1670000],
+  ['Central Darfur', 993352],
+  ['Khartoum', 414252],
+  ['Blue Nile', 370745]
+];
 new Chart(document.getElementById('rankingChart'), {
   type: 'bar',
   data: {
     labels: topDisplacementStates.map(state => state[0]),
     datasets: [{
-      data: topDisplacementStates.map(state => state[4]),
+      data: topDisplacementStates.map(state => state[1]),
       backgroundColor: ['#0033A0','#1556b8','#2875cb','#418FDE','#70a9e6'],
       borderRadius: 6,
       barThickness: 18
